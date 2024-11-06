@@ -54,7 +54,7 @@ public class Driver
         System.out.print("Enter Description: ");
         String description = myScanner.nextLine();
 
-        System.out.print("Enter Instructor name");
+        System.out.print("Enter Instructor name: ");
         String instructor = myScanner.nextLine();
 
         System.out.print("Enter Day(M,T,W,TH,F): ");
