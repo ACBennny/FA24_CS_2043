@@ -8,7 +8,7 @@ public class Group
     private String groupName;
     private List<Course> courses;
 
-    //Constructror
+    //Constructor
     public Group(String groupName)
     {
         this.groupName = groupName;
@@ -40,7 +40,7 @@ public class Group
                     String start2 = c2.getStartTime();
                     String end2 = c2.getEndTime();
 
-                    // Logic to check time over lap
+                    // Logic to check time overlap
                     if(start1.compareTo(end2) < 0 && start2.compareTo(end1) < 0)
                     {
                         System.out.println("Conflic detected between courses:");
