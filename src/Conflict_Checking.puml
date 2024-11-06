@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant User as User
+    participant Driver as Driver
+    participant Group as Group
+
+    User->>Driver: Select "Check for Conflicts" option
+    Driver->>Group: checkConflicts()
+    Group->>Group: Iterate over courses to find conflicts
+    alt Conflict Found
+        Group->>User: Display conflict details
+    else No Conflict
+        Group->>User: Display "No Conflict detected"
+    end
+@enduml

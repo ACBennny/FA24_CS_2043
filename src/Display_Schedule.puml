@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant User as User
+    participant Driver as Driver
+    participant Group as Group
+
+    User->>Driver: Select "Display Schedule" option
+    Driver->>Group: displaySchedule()
+    Group->>Group: Iterate days and call printCoursesForDay
+    loop Each Day
+        Group->>Group: Check courses for the day
+        alt Courses Available
+            Group->>User: Display courses
+        else No Courses
+            Group->>User: Display "No course found"
+        end
+    end
+@enduml

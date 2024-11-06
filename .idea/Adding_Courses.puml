@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant User as User
+    participant Driver as Driver
+    participant Group as Group
+    participant Course as Course
+
+    User->>Driver: Select "Add a Course" option
+    Driver->>User: Prompt for course details
+    User->>Driver: Enter course details (courseCode, description, instructor, day, startTime, endTime)
+    Driver->>Course: Create Course object with details
+    Driver->>Group: addCourse(Course)
+    Group->>Group: Add course to courses list
+    Driver->>User: Display confirmation "Added course"
+@enduml
