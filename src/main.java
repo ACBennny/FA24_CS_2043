@@ -4,7 +4,7 @@ public class main
     public static void main(String[] args)
     {
         Scanner myScanner = new Scanner(System.in);
-        Group group = new Group("My Scedule Group");
+        Group group = new Group("My Schedule Group");
 
         while(true)
         {
@@ -12,7 +12,7 @@ public class main
             System.out.println("\nChoose an option: ");
             System.out.println("1. Add a Course");
             System.out.println("2. Check for Conflicts");
-            System.out.println("3. Displlay Schedule");
+            System.out.println("3. Display Schedule");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
 
