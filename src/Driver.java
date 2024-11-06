@@ -1,10 +1,10 @@
 import java.util.Scanner;
-public class main
+public class Driver
 {
     public static void main(String[] args)
     {
         Scanner myScanner = new Scanner(System.in);
-        Group group = new Group("My Scedule Group");
+        Group group = new Group("My Schedule Group");
 
         while(true)
         {
@@ -12,7 +12,7 @@ public class main
             System.out.println("\nChoose an option: ");
             System.out.println("1. Add a Course");
             System.out.println("2. Check for Conflicts");
-            System.out.println("3. Displlay Schedule");
+            System.out.println("3. Display Schedule");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
 
@@ -23,7 +23,7 @@ public class main
             {
                 case 1:
                     //Add a course
-                    addCourseToGroup(myScanner.group);
+                    addCourseToGroup(myScanner, group);
                     break;
                 case 2:
                     //Check for Conflicts
@@ -50,8 +50,11 @@ public class main
         System.out.print("Enter course code: ");
         String courseCode = myScanner.nextLine();
 
-        System.out.print("Enter extra text: ");
-        String extraText = myScanner.nextLine();
+        System.out.print("Enter Description: ");
+        String description = myScanner.nextLine();
+
+        System.out.print("Enter Instructor name");
+        String instructor = myScanner.nextLine();
 
         System.out.print("Enter Day(M,T,W,TH,F): ");
         String day = myScanner.nextLine();
@@ -63,7 +66,7 @@ public class main
         String endTime = myScanner.nextLine();
 
 
-        Course course = new Course(courseCode, extraText, day, startTime, endTime);
+        Course course = new Course(courseCode, description, instructor, day, startTime, endTime);
         group.addCourse(course);
 
         System.out.println("Added course " + courseCode + " to group");
