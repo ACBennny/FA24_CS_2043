@@ -1,50 +1,43 @@
-public class Course
+import java.io.Serializable;
+import java.util.List;
+
+/*******************************************************************************
+ * @author Group Members:
+ *         Dawit Ashenafi Getachew 3752264,
+ *         Chizaram Ikpo 3760059,
+ *         Owen Yesuf 3755739,
+ *         Chukwuemeka Anyanwu 3753658
+ * @date 30-11-2024
+ * 
+ * Represents a course with a name and timeslots.
+ * Provides methods to manage and retrieve course details.
+ ******************************************************************************/
+
+
+public class Course implements Serializable 
 {
-    //Declaring and initializing Variables
+    private String name;
+    private List<String> timeslots;
 
-    private String courseCode;
-    private String description;
-    private String instructor;
-    private String startTime;
-    private String endTime;
-    private String day;
-
-    //Constructor
-    public Course(String courseCode, String description, String instructor, String day,  String startTime, String endTime)
+    public Course(String name, String timeslotString) 
     {
-        this.courseCode = courseCode;
-        this.description = description;
-        this.instructor = instructor;
-        this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.name = name;
+        this.timeslots = List.of(timeslotString.split(";"));
     }
 
-    //Getter Methods
-    public String getDay()
+    public String getName() 
     {
-        return day;
+        return name;
     }
 
-    public String getStartTime()
+    public List<String> getTimeslots() 
     {
-        return startTime;
+        return timeslots;
     }
 
-    public String getEndTime()
-    {
-        return endTime;
-    }
-
-    public String getInstructor()
-    {
-        return instructor;
-    }
-
-    // to-String method
     @Override
-    public String toString()
+    public String toString() 
     {
-        return courseCode + " " + description + " " + instructor + " " + day + " " + startTime + " " + endTime;
+        return name + " | " + String.join("; ", timeslots);
     }
 }

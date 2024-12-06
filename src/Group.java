@@ -1,96 +1,162 @@
-import java.lang.reflect.Member;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group
+/*****************************************************************************************
+ * @author Group Members:
+ *         Dawit Ashenafi Getachew 3752264,
+ *         Chizaram Ikpo 3760059,
+ *         Owen Yesuf 3755739,
+ *         Chukwuemeka Anyanwu 3753658
+ * @date 30-11-2024
+ * 
+ * Represents a group of courses and non-course blocks.
+ * Provides methods to manage the group, add items, and display schedules.
+ *****************************************************************************************/
+
+public class Group implements Serializable 
 {
-    // Declaration and Initialization
     private String groupName;
     private List<Course> courses;
+    private List<NonCourseBlock> nonCourseBlocks;
 
-    //Constructor
-    public Group(String groupName)
+    public Group(String groupName) 
     {
         this.groupName = groupName;
         this.courses = new ArrayList<>();
+        this.nonCourseBlocks = new ArrayList<>();
     }
 
-    // Method to add course to group
-    public void addCourse(Course course)
+    public String getGroupName() 
+    {
+        return groupName;
+    }
+
+    public void addCourse(Course course) 
     {
         courses.add(course);
     }
 
-    //Method to check for conflicts
-    public void checkConflicts()
+    public void addNonCourseBlock(NonCourseBlock block) 
     {
-        boolean conflictFound = false;
-        for(int i = 0; i < courses.size(); i++)
-        {
-            for(int j = i+1; j < courses.size(); j++)
-            {
-                Course c1 = courses.get(i);
-                Course c2 = courses.get(j);
+        nonCourseBlocks.add(block);
+    }
 
-                //check if they are on the same day
-                if (c1.getDay().equals(c2.getDay()))
-                {
-                    String start1 = c1.getStartTime();
-                    String end1 = c1.getEndTime();
-                    String start2 = c2.getStartTime();
-                    String end2 = c2.getEndTime();
+    public void displaySchedule(String filename) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+        System.out.println("Schedule for group: " + groupName);
+        writer.write("Schedule for group: " + groupName + "\n\n");
 
-                    // Logic to check time overlap
-                    if(start1.compareTo(end2) < 0 && start2.compareTo(end1) < 0)
-                    {
-                        System.out.println("Conflic detected between courses:");
-                        System.out.println(c1);
-                        System.out.println(c2);
-                        conflictFound = true;
+        // Define days of the week
+        String[] dayCodes = {"M", "T", "W", "TH", "F"};
+        String[] dayNames = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+
+        // Iterate over each day
+        for (int i = 0; i < dayCodes.length; i++) {
+            String currentDayCode = dayCodes[i];
+            String currentDayName = dayNames[i];
+
+            System.out.println(currentDayName + ":");
+            writer.write(currentDayName + ":\n");
+            boolean hasItems = false;
+
+            // Check courses
+            for (Course course : courses) {
+                for (String timeslot : course.getTimeslots()) {
+                    // Parse individual days from the timeslot
+                    String[] days = parseDays(timeslot);
+
+                    // Check if the current day matches the parsed days
+                    for (String day : days) {
+                        if (day.equals(currentDayCode)) {
+                            String output = "  Course: " + course.getName() + " | " + timeslot;
+                            System.out.println(output);
+                            writer.write(output + "\n");
+                            hasItems = true;
+                        }
                     }
                 }
             }
-        }
 
-        if(!conflictFound)
-        {
-            System.out.println("No Conflict detected between courses:");
-        }
-    }
+            // Check non-course blocks
+            for (NonCourseBlock block : nonCourseBlocks) {
+                // Parse individual days from the block's timeslot
+                String[] days = parseDays(block.getTimeslot());
 
-    //Method to display groupSchedule
-    public void  displaySchedule()
-    {
-        System.out.println("Schedule for group: " + groupName);
-
-        String[] dayCode = {"M", "T", "W", "TH", "F"};
-        String[] dayNames = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-
-        //Sort courses by day
-        for(int i = 0; i < dayCode.length; i++)
-        {
-            printCoursesForDay(dayCode[i], dayNames[i]);
-        }
-    }
-
-    public void printCoursesForDay(String dayCode, String dayName)
-    {
-        System.out.println(dayName + ":");
-        boolean hasCourses = false;
-
-        for(Course course : courses)
-        {
-            if (course.getDay().equals(dayCode))
-            {
-                System.out.println(course);
-                hasCourses = true;
+                // Check if the current day matches the parsed days
+                for (String day : days) {
+                    if (day.equals(currentDayCode)) {
+                        String output = "  Block: " + block.getName() + " | " + block.getTimeslot();
+                        System.out.println(output);
+                        writer.write(output + "\n");
+                        hasItems = true;
+                    }
+                }
             }
+
+            // If no items found for the current day
+            if (!hasItems) {
+                String output = "  No items scheduled.";
+                System.out.println(output);
+                writer.write(output + "\n");
+            }
+
+            System.out.println();
+            writer.write("\n");
         }
 
-        if (!hasCourses)
-        {
-            System.out.println("No course found for day: " + dayName);
-        }
+        System.out.println("Schedule saved to " + filename);
+        writer.write("Schedule saved to " + filename + "\n");
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
+
+/**
+ * Parses composite timeslot strings into individual day codes.
+ * For example: "MW" -> ["M", "W"], "TTH" -> ["T", "TH"].
+ *
+ * @param timeslot The timeslot string to parse.
+ * @return An array of individual day codes.
+ */
+private String[] parseDays(String timeslot) {
+    List<String> days = new ArrayList<>();
+
+    // Match specific multi-day codes
+    if (timeslot.contains("MW")) {
+        days.add("M");
+        days.add("W");
+    }
+    if (timeslot.contains("TTH")) {
+        days.add("T");
+        days.add("TH");
+    }
+
+    // Match individual days
+    if (timeslot.contains("M") && !days.contains("M")) {
+        days.add("M");
+    }
+    if (timeslot.contains("T") && !days.contains("T")) {
+        days.add("T");
+    }
+    if (timeslot.contains("W") && !days.contains("W")) {
+        days.add("W");
+    }
+    if (timeslot.contains("TH") && !days.contains("TH")) {
+        days.add("TH");
+    }
+    if (timeslot.contains("F") && !days.contains("F")) {
+        days.add("F");
+    }
+
+    return days.toArray(new String[0]);
+}
+
+
 
 }
